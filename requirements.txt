@@ -1,0 +1,20 @@
+# Web framework
+flask==2.3.3
+flask-cors==4.0.0
+Flask-Mail==0.9.1
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Supabase client
+supabase==1.0.3
+
+# HTTP client (used by Supabase)
+httpx
+
+# Utilities
+pydantic==2.4.2
+
+apscheduler
+requests
+together
