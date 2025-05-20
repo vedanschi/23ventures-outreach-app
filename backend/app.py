@@ -16,7 +16,7 @@ from .config import init_mail, supabase  # Import from config
 
 # Create Flask app
 app = Flask(__name__)
-allowed_origins = os.getenv('ALLOWED_ORIGINS', 'http://localhost:5173').split(',')
+allowed_origins = os.getenv('ALLOWED_ORIGINS', 'https://23venturesoutreach.netlify.app/').split(',')
 CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
 # Initialize mail with app
