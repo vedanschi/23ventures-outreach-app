@@ -101,6 +101,23 @@ def process_csv():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/track/<email_id>', methods=['GET'])
+def track_email(email_id):
+    try:
+        # Update the email as viewed in the database
+        supabase.table('emails').update({'viewed': True, 'viewed_at': 'now()'}).eq('id', email_id).execute()
+        
+        # Return a 1x1 transparent pixel
+        response = make_response(send_file(io.BytesIO(base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')), 
+                                          mimetype='image/gif'))
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        return response
+    except Exception as e:
+        print(f"Error tracking email: {e}")
+        # Still return a pixel to avoid errors in the email client
+        return send_file(io.BytesIO(base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')), 
+                         mimetype='image/gif')
+
 if __name__ == '__main__':
     # Run on port 5000
     app.run(debug=True, host='0.0.0.0', port=5000)
