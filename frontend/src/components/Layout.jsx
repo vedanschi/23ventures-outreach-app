@@ -1,33 +1,58 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { supabase } from '../supabaseClient'
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 export default function Layout({ children }) {
   const location = useLocation();
-  
+  const navigate = useNavigate();
+
   const isActive = (path) => location.pathname === path;
-  
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
+  };
+
   return (
-    <div className="app-container">
-      <header className="bg-purple p-4 shadow-lg">
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <header className="bg-purple-700 px-6 py-4 shadow-lg">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-white text-xl font-bold">23Ventures Outreach</h1>
-          <nav className="flex gap-4">
-            <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>Dashboard</Link>
-            <Link to="/startups" className={`nav-link ${isActive('/startups') ? 'active' : ''}`}>Startups</Link>
-            <Link to="/send" className={`nav-link ${isActive('/send') ? 'active' : ''}`}>Send Emails</Link>
-            <Link to="/emails" className={`nav-link ${isActive('/emails') ? 'active' : ''}`}>Email History</Link>
-            <button onClick={() => supabase.auth.signOut()} className="nav-link">Sign Out</button>
+          <Link to="/dashboard" className="text-white text-3xl font-extrabold">
+            23Ventures Outreach
+          </Link>
+          <nav className="flex space-x-8">
+            {[
+              { to: '/dashboard', label: 'Dashboard' },
+              { to: '/startups', label: 'Startups' },
+              { to: '/send', label: 'Send Emails' },
+              { to: '/emails', label: 'Email History' }
+            ].map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`text-white transition-colors duration-200 hover:text-green-300 ${
+                  isActive(to) ? 'underline decoration-blue-300' : ''
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+            <button
+              onClick={handleSignOut}
+              className="text-white transition-colors duration-200 hover:text-green-300"
+            >
+              Sign Out
+            </button>
           </nav>
         </div>
       </header>
-      <main className="container mx-auto p-4">
+      <main className="flex-grow container mx-auto px-6 py-10">
         {children}
       </main>
-      <footer className="bg-neutral-800 text-white p-4 mt-8">
-        <div className="container mx-auto text-center">
-          <p>© 2023 23Ventures. All rights reserved.</p>
+      <footer className="bg-green-800 text-white py-6">
+        <div className="container mx-auto text-center text-sm opacity-90">
+          © 2025 23Ventures. All rights reserved.
         </div>
       </footer>
     </div>
