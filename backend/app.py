@@ -23,9 +23,9 @@ CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 init_mail(app)
 
 # Now import modules that depend on initialized extensions
-from utils.followup_job import send_scheduled_followups
-from utils.ai_utils import generate_outreach_prompt, generate_followup_prompt, get_generated_email
-from utils.email_utils import send_email
+from backend.utils.followup_job import send_scheduled_followups
+from backend.utils.ai_utils import generate_outreach_prompt, generate_followup_prompt, get_generated_email
+from backend.utils.email_utils import send_email
 
 @app.route('/api/send-email', methods=['POST'])
 def send_email_route():
