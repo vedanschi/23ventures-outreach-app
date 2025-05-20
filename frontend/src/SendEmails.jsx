@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { FaPaperPlane, FaSpinner, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
-import { API_BASE_URL, API_ENDPOINTS } from '../config'
+import { API_BASE_URL, API_ENDPOINTS } from './api/config';
 import './App.css';
 
 export default function SendEmails() {
