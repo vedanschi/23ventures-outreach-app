@@ -12,7 +12,7 @@ load_dotenv()
 # Import at the top
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from config import init_mail, supabase  # Import from config
+from .config import init_mail, supabase  # Import from config
 
 # Create Flask app
 app = Flask(__name__)

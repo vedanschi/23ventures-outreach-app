@@ -1,5 +1,5 @@
 from flask_mail import Message
-from config import mail  # Import from config
+from ..config import mail  # Import from config
 
 
 def send_email(recipient: str, subject: str, body: str, html: bool = False):

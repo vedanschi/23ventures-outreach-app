@@ -1,8 +1,8 @@
 # /backend/utils/followup_job.py
 from datetime import datetime, timedelta
-from config import supabase  # Import from config instead of creating a new client
-from utils.email_utils import send_email
-from utils.ai_utils import generate_followup_prompt, get_generated_email
+from ..config import supabase  # Import from config instead of creating a new client
+from backend.utils.email_utils import send_email
+from backend.utils.ai_utils import generate_followup_prompt, get_generated_email
 
 def send_scheduled_followups():
     """
