@@ -73,7 +73,7 @@ export default function SendEmails() {
 
       // Send each email sequentially (or batch as desired)
       for (const payload of payloadList) {
-        const res = await fetch(`${API_URL}/api/send-email`, {
+        const res = await fetch(`${API_BASE_URL}/api/send-email`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
