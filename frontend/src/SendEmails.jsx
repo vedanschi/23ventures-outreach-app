@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { FaPaperPlane, FaSpinner, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
+import { API_BASE_URL, API_ENDPOINTS } from '../config'
 import './App.css';
 
 export default function SendEmails() {
@@ -73,7 +74,7 @@ export default function SendEmails() {
 
       // Send each email sequentially (or batch as desired)
       for (const payload of payloadList) {
-        const res = await fetch(`${API_BASE_URL}/api/send-email`, {
+        const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.SEND_EMAIL}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
