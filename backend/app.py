@@ -65,7 +65,7 @@ def send_email_route():
         'startup_id': startup_id,
         'subject': current_subject,
         'body': "Email content pending generation...",
-        'sent_at': datetime.datetime().isoformat(),
+        'sent_at': datetime.datetime.now(datetime.timezone.utc).isoformat(), # FIX APPLIED HERE
         'follow_up': False
     }
 
