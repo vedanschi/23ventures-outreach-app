@@ -65,7 +65,7 @@ def send_email_route():
         'startup_id': startup_id,
         'subject': current_subject,
         'body': "Email content pending generation...",
-        'sent_at': datetime.datetime.utcnow().isoformat(),
+        'sent_at': datetime.datetime().isoformat(),
         'follow_up': False
     }
 
@@ -147,7 +147,7 @@ def track_email(email_id):
     app.logger.info(f"Tracking pixel accessed for email_id: {email_id}. DB update skipped.")
     
     try:
-        update_payload = {'viewed': True, 'viewed_at': datetime.datetime.utcnow().isoformat()}
+        update_payload = {'viewed': True, 'viewed_at': datetime.datetime.now(datetime.timezone.utc)}
         result = supabase.table('emails').update(update_payload).eq('id', email_id).execute()
 
         if hasattr(result, 'error') and result.error:
