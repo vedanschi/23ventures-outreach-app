@@ -9,7 +9,8 @@ def send_email(recipient: str, subject: str, body: str, html: bool = False):
         subject=subject,
         recipients=[recipient],
         body=body,
-        html=html
+        html=html,
+        sender=mail.default_sender
     )
     mail.send(msg)
     return True
