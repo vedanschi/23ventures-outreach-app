@@ -16,7 +16,7 @@ from .config import init_mail, supabase  # Import from config
 
 # Create Flask app
 app = Flask(__name__)
-allowed_origins = os.getenv('ALLOWED_ORIGINS', 'https://23venturesoutreach.netlify.app/').split(',')
+allowed_origins = os.getenv('ALLOWED_ORIGINS', 'https://23venturesoutreach.netlify.app').split(',')
 CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
 # Initialize mail with app
@@ -50,7 +50,7 @@ def send_email_route():
         return jsonify({"error": "Invalid email type"}), 400
 
     # Generate email via Together AI
-    email_body = get_generated_email(prompt)
+    email_body = get_generated_email(prompt, recipient_email)
 
     if email_body.startswith("Error"):
         return jsonify({"error": email_body}), 500
@@ -106,7 +106,7 @@ def track_email(email_id):
     try:
         # Update the email as viewed in the database
         supabase.table('emails').update({'viewed': True, 'viewed_at': 'now()'}).eq('id', email_id).execute()
-        
+
         # Return a 1x1 transparent pixel
         response = make_response(send_file(io.BytesIO(base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')), 
                                           mimetype='image/gif'))
