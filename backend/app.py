@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Flask, request, jsonify, make_response, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -69,7 +70,7 @@ def send_email_route():
 
     email_record = {
         "recipient_email": recipient_email,
-        "subject": subject,
+        "subject": current_subject,
         "body": email_body_generated,  # Store the original generated body
         "type": email_type,
         "status": "sent"
@@ -103,7 +104,7 @@ def send_email_route():
     except Exception as e:
         print(f"Exception inserting email record into Supabase for {recipient_email}: {e}. Proceeding without tracking pixel.")
 
-    email_sent_successfully = send_email(recipient_email, subject, email_body_to_send, html=is_html)
+    email_sent_successfully = send_email(recipient_email, current_subject, email_body_to_send, html=is_html)
     
     if not email_sent_successfully:
         # Optionally update the status in the database if email sending failed

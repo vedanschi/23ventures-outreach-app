@@ -71,7 +71,7 @@ def get_generated_email(prompt: str, email_id: str | None = None):
         result = response.json()
         email_content = result['choices'][0]['message']['content'].strip()
             
-        return final_email_body
+        return email_content
 
     except requests.exceptions.Timeout:
         return "Error: Timeout connecting to AI API."
