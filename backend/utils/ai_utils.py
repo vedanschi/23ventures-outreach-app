@@ -26,7 +26,7 @@ def generate_outreach_prompt(company_name, recipient_name, product_description):
         "- Introduces 23 Ventures.\n"
         "- Highlights the value proposition.\n"
         "- Encourages a response or meeting.\n\n"
-        "The email should be in **HTML format**. Ensure any special characters are HTML-encoded if necessary, but provide a complete HTML email body.\n"
+        "The email will be directly sent to the recipient, so do not include any placeholders, HTML tags or instructions for the email client.\n"
         "End the email with a signature: 'Manthan Gupta, Founder, 23Ventures'\n"
         "Ensure the tone is professional and friendly."
     )
@@ -44,7 +44,7 @@ def generate_followup_prompt(company_name, recipient_name, previous_interaction)
         "- References the previous interaction.\n"
         "- Highlights the value proposition of 23 Ventures.\n"
         "- Encourages a response or meeting.\n\n"
-        "The email will be directly sent to the recipient, so do not include any placeholders or instructions for the email client.\n"
+        "The email will be directly sent to the recipient, so do not include any placeholders, HTML tags or instructions for the email client.\n"
         "End the email with a signature: 'Manthan Gupta, Founder, 23Ventures'\n"
         "Ensure the tone is professional and friendly."
     )

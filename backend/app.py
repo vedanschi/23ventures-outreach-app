@@ -14,6 +14,7 @@ from .config import init_mail, supabase # Correct way to import mail and supabas
 from backend.utils.followup_job import send_scheduled_followups
 from backend.utils.ai_utils import generate_outreach_prompt, generate_followup_prompt, get_generated_email
 from backend.utils.email_utils import send_email
+from backend.api.track import handler as track_handler
 
 # Create Flask app
 app = Flask(__name__)
@@ -160,29 +161,7 @@ def process_csv():
 
 @app.route('/api/track/<email_id>', methods=['GET'])
 def track_email(email_id):
-    try:
-        # Update the email as viewed in the database
-        # Use a specific timestamp for viewed_at for consistency, e.g., supabase.rpc('now') or similar
-        update_response = supabase.table('emails').update({'viewed': True, 'viewed_at': 'now()'}).eq('id', email_id).execute()
-
-        # Log if update failed for some reason (optional, but good for debugging)
-        if hasattr(update_response, 'error') and update_response.error:
-            print(f"Error updating email view status for {email_id}: {update_response.error}")
-        elif not (hasattr(update_response, 'data') and update_response.data and len(update_response.data) > 0):
-            print(f"No data returned or update seemed unsuccessful for {email_id}, but no explicit error.")
-
-
-    except Exception as e:
-        print(f"Exception while tracking email {email_id}: {e}")
-    
-    # Always return a 1x1 transparent pixel, regardless of DB update success
-    # This prevents broken images in emails if tracking fails
-    pixel_gif = base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
-    response = make_response(send_file(io.BytesIO(pixel_gif), mimetype='image/gif'))
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
-    return response
+    return track_handler(email_id)
 
 if __name__ == '__main__':
     # Add a basic logger handler for console output during local development
