@@ -11,12 +11,12 @@ import datetime # For sent_at, though 'now()' is often handled by Supabase
 load_dotenv()
 
 # Assuming config.py is in the same directory
-from config import init_mail, supabase
+from .config import init_mail, supabase
 
 # Assuming other utility files are in the same directory as per GitHub structure
-from followup_job import send_scheduled_followups # Keep if used, or remove if not directly called by app.py routes
-from ai_utils import generate_outreach_prompt, generate_followup_prompt, get_generated_email
-from email_utils import send_email
+from backend.utils.followup_job import send_scheduled_followups # Keep if used, or remove if not directly called by app.py routes
+from backend.utils.ai_utils import generate_outreach_prompt, generate_followup_prompt, get_generated_email
+from backend.utils.email_utils import send_email
 
 # Create Flask app
 app = Flask(__name__)
