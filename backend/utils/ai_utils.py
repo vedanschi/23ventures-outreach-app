@@ -60,18 +60,6 @@ def get_generated_email(prompt, email_id):
         response.raise_for_status()
         result = response.json()
         email_content = result['choices'][0]['message']['content'].strip()
-        
-        # Add tracking pixel at the end of the email
-        tracking_url = f"{os.getenv('BACKEND_URL', 'http://localhost:5000')}/api/track/{email_id}"
-        tracking_pixel = f'<img src="{tracking_url}" width="1" height="1" alt="" style="display:none">'
-        
-        # For HTML emails
-        if '<html>' in email_content:
-            # Insert before closing body tag
-            email_content = email_content.replace('</body>', f'{tracking_pixel}</body>')
-        else:
-            # For plain text emails, append at the end
-            email_content += f'\n\n{tracking_pixel}'
             
         return email_content
     except requests.exceptions.RequestException as e:
