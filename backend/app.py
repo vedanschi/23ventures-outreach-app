@@ -3,10 +3,8 @@ from flask import Flask, request, jsonify, make_response, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
 import csv
-from io import StringIO, BytesIO
+import io # Changed from 'from io import StringIO'
 import base64
-import datetime
-import uuid # Import for generating unique email IDs
 
 # Load environment variables
 load_dotenv()
@@ -42,6 +40,9 @@ def send_email_route():
     # Generate a unique ID for the email for tracking purposes
     email_id = str(uuid.uuid4())
 
+    if not isinstance(recipient_email, str) or not recipient_email.strip():
+        return jsonify({"error": "Recipient email must be a non-empty string"}), 400
+
     if email_type == "outreach":
         product_description = data.get("product_description", "our founder-first accelerator with equity-for-growth model.")
         prompt = generate_outreach_prompt(company_name, recipient_name, product_description)
@@ -55,50 +56,62 @@ def send_email_route():
     else:
         return jsonify({"error": "Invalid email type"}), 400
 
-    # Generate email via Together AI, passing the generated email_id for tracking
-    email_body_html = get_generated_email(prompt, email_id) # Pass email_id here
+    # Generate email via Together AI
+    # Note: The 'email_id' parameter was removed from get_generated_email as part of the changes
+    # in backend/utils/ai_utils.py, so it's correctly called here without it.
+    email_body_generated = get_generated_email(prompt, recipient_email) 
 
-    if email_body_html.startswith("Error"): # Check for error string from AI utility
-        return jsonify({"error": email_body_html}), 500
+    if not isinstance(email_body_generated, str):
+        print(f"Error: get_generated_email did not return a string. Got: {type(email_body_generated)}")
+        return jsonify({"error": "Failed to generate email content due to unexpected AI response type."}), 500
+    if email_body_generated.startswith("Error"): # Keep existing check for error strings from AI
+        return jsonify({"error": email_body_generated}), 500
 
-    # Send email, explicitly setting html=True as get_generated_email produces HTML
+    email_record = {
+        "recipient_email": recipient_email,
+        "subject": subject,
+        "body": email_body_generated,  # Store the original generated body
+        "type": email_type,
+        "status": "sent"
+        # "viewed" and "viewed_at" will be updated by the tracking pixel
+    }
+
+    email_body_to_send = email_body_generated # Default to original if anything goes wrong
+    is_html = False # Initialize is_html flag
+
     try:
-        send_email(recipient_email, current_subject, email_body_html, html=True)
-    except Exception as e:
-        app.logger.error(f"Error sending email via Flask-Mail: {e}")
-        return jsonify({"error": f"Failed to send email: {e}"}), 500
-
-    # --- START: Database saving logic for emails ---
-    try:
-        # Prepare data for insertion
-        email_data = {
-            'id': email_id, # Use the generated UUID as the ID
-            'recipient_email': recipient_email,
-            'subject': current_subject,
-            'body': email_body_html,
-            'type': email_type,
-            'status': 'sent', # Mark as sent
-            'sent_at': datetime.datetime.now(datetime.timezone.utc), # Use UTC timezone
-            'viewed': False, # Default to not viewed
-            'follow_up': False # Default for follow-up status
-            # Add other fields as needed based on your 'emails' table schema
-        }
+        insertion_response = supabase.table('emails').insert(email_record).execute()
         
-        # Insert into 'emails' table
-        result = supabase.table('emails').insert(email_data).execute()
-        
-        if hasattr(result, 'error') and result.error:
-            app.logger.error(f"Error saving email to DB: {result.error.message}")
-            # Even if DB save fails, we should still return success for email send
-            return jsonify({"message": f"{email_type.title()} email sent to {recipient_email}, but failed to save to database: {result.error.message}"}), 200
-            
-    except Exception as e:
-        app.logger.error(f"Exception during email DB save: {e}")
-        # Even if DB save fails, we should still return success for email send
-        return jsonify({"message": f"{email_type.title()} email sent to {recipient_email}, but an error occurred saving to database: {e}"}), 200
-    # --- END: Database saving logic for emails ---
+        if hasattr(insertion_response, 'data') and insertion_response.data and len(insertion_response.data) > 0:
+            email_id = insertion_response.data[0].get('id')
+            if email_id:
+                app_base_url = os.getenv('APP_BASE_URL', 'http://localhost:5000') # Default if not set
+                tracking_pixel_url = f"{app_base_url}/api/track/{email_id}"
+                tracking_pixel_img = f'<img src="{tracking_pixel_url}" width="1" height="1" alt="" />'
+                email_body_to_send = email_body_generated + tracking_pixel_img
+                is_html = True # Set flag here
+            else:
+                print(f"Email ID not found in Supabase response for {recipient_email}. Proceeding without tracking pixel.")
+        else:
+            error_detail = "Unknown error during Supabase insertion."
+            if hasattr(insertion_response, 'error') and insertion_response.error:
+                error_detail = str(insertion_response.error)
+            elif hasattr(insertion_response, 'message') and insertion_response.message:
+                error_detail = insertion_response.message
+            print(f"Error inserting email record into Supabase for {recipient_email}: {error_detail}. Proceeding without tracking pixel.")
 
-    return jsonify({"message": f"{email_type.title()} email sent to {recipient_email} and saved to database."})
+    except Exception as e:
+        print(f"Exception inserting email record into Supabase for {recipient_email}: {e}. Proceeding without tracking pixel.")
+
+    email_sent_successfully = send_email(recipient_email, subject, email_body_to_send, html=is_html)
+    
+    if not email_sent_successfully:
+        # Optionally update the status in the database if email sending failed
+        # For now, just return an error to the client
+        return jsonify({"error": "Failed to send email. Check server logs for details."}), 500
+        
+    return jsonify({"message": f"{email_type.title()} email sent to {recipient_email}."})
+
 
 @app.route('/api/process-csv', methods=['POST'])
 def process_csv():
@@ -113,7 +126,7 @@ def process_csv():
         
         # Read file bytes into text
         text = response.decode('utf-8')
-        reader = csv.DictReader(StringIO(text))
+        reader = csv.DictReader(io.StringIO(text)) # Changed to io.StringIO
 
         # 2) Build payload
         rows = []
@@ -149,21 +162,27 @@ def process_csv():
 def track_email(email_id):
     try:
         # Update the email as viewed in the database
-        # Use datetime.datetime.now() for better precision and timezone awareness
-        update_payload = {'viewed': True, 'viewed_at': datetime.datetime.now(datetime.timezone.utc)}
-        result = supabase.table('emails').update(update_payload).eq('id', email_id).execute()
+        # Use a specific timestamp for viewed_at for consistency, e.g., supabase.rpc('now') or similar
+        update_response = supabase.table('emails').update({'viewed': True, 'viewed_at': 'now()'}).eq('id', email_id).execute()
 
-        if hasattr(result, 'error') and result.error:
-            app.logger.error(f"Error tracking email {email_id} in DB: {result.error.message}")
-            
+        # Log if update failed for some reason (optional, but good for debugging)
+        if hasattr(update_response, 'error') and update_response.error:
+            print(f"Error updating email view status for {email_id}: {update_response.error}")
+        elif not (hasattr(update_response, 'data') and update_response.data and len(update_response.data) > 0):
+            print(f"No data returned or update seemed unsuccessful for {email_id}, but no explicit error.")
+
+
     except Exception as e:
-        app.logger.error(f"Exception during DB update for tracking email {email_id}: {e}")
+        print(f"Exception while tracking email {email_id}: {e}")
     
-    # Return a 1x1 transparent pixel
+    # Always return a 1x1 transparent pixel, regardless of DB update success
+    # This prevents broken images in emails if tracking fails
     pixel_gif = base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
-    response = make_response(send_file(BytesIO(pixel_gif), mimetype='image/gif'))
+    response = make_response(send_file(io.BytesIO(pixel_gif), mimetype='image/gif'))
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    response.headers['Pragma'] = 'no-cache' # Added for stricter caching control
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
     return response
 
 if __name__ == '__main__':

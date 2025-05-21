@@ -1,16 +1,18 @@
 from flask_mail import Message
-from ..config import mail  # Import from config
+from ..config import mail
+import traceback # Add for logging
 
 def send_email(recipient: str, subject: str, body: str, html: bool = False):
-    """
-    Send an email with given subject and body. If html is True, send as HTML.
-    """
     msg = Message(
         subject=subject,
         recipients=[recipient],
-        body=body,
-        html=html,
-        sender=mail.default_sender
+        body=None if html else body, # If HTML, body arg is for plain text part
+        html=body if html else None  # If HTML, html arg is for HTML part
     )
-    mail.send(msg)
-    return True
+    try:
+        mail.send(msg)
+        return True
+    except Exception as e:
+        print(f"Error sending email via Flask-Mail to {recipient}: {e}")
+        print(traceback.format_exc()) # Log the full traceback
+        return False

@@ -69,30 +69,7 @@ def get_generated_email(prompt: str, email_id: str | None = None):
         response = requests.post(TOGETHER_API_URL, headers=headers, json=data, timeout=30) # Added timeout
         response.raise_for_status() # Raises HTTPError for bad responses (4xx or 5xx)
         result = response.json()
-        ai_content = result['choices'][0]['message']['content'].strip()
-        
-        # Tracking pixel HTML (more robust style)
-        tracking_pixel_html = f'<img src="{BACKEND_URL}/api/track/{email_id}" width="1" height="1" style="display:block; border:0px; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;" aria-hidden="true">'
-        
-        # Check if AI content is already HTML (simple check)
-        is_ai_html = "<html>" in ai_content.lower() or "<p>" in ai_content.lower() or "<br" in ai_content.lower()
-
-        final_email_body = ""
-        if is_ai_html:
-            # If AI provides HTML, try to inject pixel before </body>, else append
-            if "</body>" in ai_content.lower():
-                # Case-insensitive replace for </body>
-                body_end_index = ai_content.lower().rfind("</body>")
-                final_email_body = ai_content[:body_end_index] + tracking_pixel_html + ai_content[body_end_index:]
-            else:
-                final_email_body = ai_content + tracking_pixel_html
-        else:
-            # If AI provides plain text, convert to basic HTML and add pixel
-            escaped_content = html.escape(ai_content) # Escape special HTML characters
-            # Replace newlines with <br> tags for HTML formatting
-            html_formatted_content = f"<p>{escaped_content.replace(chr(10), '<br>')}</p>"
-            # Wrap in a full HTML document for robustness
-            final_email_body = f"<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body>{html_formatted_content}{tracking_pixel_html}</body></html>"
+        email_content = result['choices'][0]['message']['content'].strip()
             
         return final_email_body
 
