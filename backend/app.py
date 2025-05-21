@@ -112,7 +112,6 @@ def send_email_route():
         
     return jsonify({"message": f"{email_type.title()} email sent to {recipient_email}."})
 
-
 @app.route('/api/process-csv', methods=['POST'])
 def process_csv():
     data = request.get_json()
@@ -182,7 +181,6 @@ def track_email(email_id):
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
-
     return response
 
 if __name__ == '__main__':
