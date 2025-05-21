@@ -1,3 +1,6 @@
 {
-    "github.copilot.nextEditSuggestions.fixes": true
+    "github.copilot.nextEditSuggestions.fixes": true,
+    "python.analysis.extraPaths": [
+        "./backend/utils"
+    ]
 }

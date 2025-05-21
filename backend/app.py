@@ -1,7 +1,6 @@
 import os
 from flask import Flask, request, jsonify, make_response, send_file
 from flask_cors import CORS
-from flask_mail import Mail
 from dotenv import load_dotenv
 import csv
 import io # Changed from 'from io import StringIO'
@@ -10,23 +9,18 @@ import base64
 # Load environment variables
 load_dotenv()
 
-# Import at the top
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from .config import init_mail, supabase  # Import from config
+from .config import init_mail, supabase # Correct way to import mail and supabase from config
+from backend.utils.followup_job import send_scheduled_followups
+from backend.utils.ai_utils import generate_outreach_prompt, generate_followup_prompt, get_generated_email
+from backend.utils.email_utils import send_email
 
 # Create Flask app
 app = Flask(__name__)
 allowed_origins = os.getenv('ALLOWED_ORIGINS', 'https://23venturesoutreach.netlify.app').split(',')
 CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
-# Initialize mail with app
-init_mail(app)
-
-# Now import modules that depend on initialized extensions
-from backend.utils.followup_job import send_scheduled_followups
-from backend.utils.ai_utils import generate_outreach_prompt, generate_followup_prompt, get_generated_email
-from backend.utils.email_utils import send_email
+# Initialize mail with app (assigning to mail_instance is good practice)
+mail_instance = init_mail(app)
 
 @app.route('/api/send-email', methods=['POST'])
 def send_email_route():
@@ -36,6 +30,15 @@ def send_email_route():
     recipient_name = data.get("recipient_name")
     recipient_email = data.get("recipient_email")
     company_name = data.get("company_name")
+    
+    # Add input validation for required fields
+    if not all([email_type, recipient_name, recipient_email, company_name]):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    current_subject = ""
+    prompt = ""
+    # Generate a unique ID for the email for tracking purposes
+    email_id = str(uuid.uuid4())
 
     if not isinstance(recipient_email, str) or not recipient_email.strip():
         return jsonify({"error": "Recipient email must be a non-empty string"}), 400
@@ -43,12 +46,12 @@ def send_email_route():
     if email_type == "outreach":
         product_description = data.get("product_description", "our founder-first accelerator with equity-for-growth model.")
         prompt = generate_outreach_prompt(company_name, recipient_name, product_description)
-        subject = f"Let’s Unlock {company_name}’s Potential | 23 Ventures"
+        current_subject = f"Let’s Unlock {company_name}’s Potential | 23 Ventures" # Renamed to current_subject for clarity
 
     elif email_type == "followup":
         previous_interaction = data.get("previous_interaction", "Initial outreach email sent last week.")
         prompt = generate_followup_prompt(company_name, recipient_name, previous_interaction)
-        subject = f"Following Up: 23 Ventures & {company_name}"
+        current_subject = f"Following Up: 23 Ventures & {company_name}" # Renamed to current_subject
 
     else:
         return jsonify({"error": "Invalid email type"}), 400
@@ -143,13 +146,15 @@ def process_csv():
             
         result = supabase.table('startups').insert(rows).execute()
         
-        # Check for errors in the response
+        # Improved error checking for Supabase insert
         if hasattr(result, 'error') and result.error:
-            return jsonify({'error': str(result.error)}), 500
+            app.logger.error(f"Error inserting CSV rows into DB: {result.error.message}")
+            return jsonify({'error': f"Failed to insert CSV rows: {result.error.message}"}), 500
             
-        return jsonify({'message': 'CSV processed successfully', 'inserted': len(rows)}), 200
+        return jsonify({'message': 'CSV processed successfully', 'inserted_count': len(result.data if result.data else [])}), 200
             
     except Exception as e:
+        app.logger.error(f"Error processing CSV: {e}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/track/<email_id>', methods=['GET'])
@@ -179,5 +184,7 @@ def track_email(email_id):
     return response
 
 if __name__ == '__main__':
-    # Run on port 5000
+    # Add a basic logger handler for console output during local development
+    import logging
+    logging.basicConfig(level=logging.INFO)
     app.run(debug=True, host='0.0.0.0', port=5000)
