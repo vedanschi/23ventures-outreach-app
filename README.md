@@ -62,6 +62,8 @@ graph LR
   Backend -->|Triggers AI| TogetherAI
   Scheduler[APScheduler] --> FollowUpJobs
   TrackingPixel --> Backend
+  FollowUpJobs --> Backend
+
 ```
 
 ## License
