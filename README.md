@@ -54,7 +54,7 @@ A modern, secure outreach platform built for **23Ventures** (a venture capital &
 
 ## 🏗️ Architecture Overview
 
-```mermaid
+```
 graph LR
   Frontend[React/Vite @ Netlify] -->|API calls| Backend[Flask @ Render]
   Backend -->|Reads/Writes| Supabase[(PostgreSQL + Storage)]
@@ -62,7 +62,7 @@ graph LR
   Backend -->|Triggers AI| TogetherAI
   Scheduler[APScheduler] --> FollowUpJobs
   TrackingPixel --> Backend
-
+```
 
 ## License
 MIT License - See LICENSE for details
