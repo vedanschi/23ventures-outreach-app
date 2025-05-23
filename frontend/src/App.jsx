@@ -1,16 +1,16 @@
 // src/App.jsx
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import SignUp from './SignUp';
-import Login  from './Login';
-import Dashboard from './Dashboard';
-import UploadCsv from './UploadCsv';
-import SendEmails from './SendEmails';
-import StartupsList from './StartupsList';
-import EmailsList from './EmailsList';
-import Layout from './components/Layout';
-import { supabase } from './supabaseClient';
-import { useState, useEffect } from 'react';
-import './App.css';
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import SignUp from "./SignUp";
+import Login from "./Login";
+import Dashboard from "./Dashboard";
+import UploadCsv from "./UploadCsv";
+import SendEmails from "./SendEmails";
+import StartupsList from "./StartupsList";
+import EmailsList from "./EmailsList";
+import Layout from "./components/Layout";
+import { supabase } from "./supabaseClient";
+import { useState, useEffect } from "react";
+// import "./App.css";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -21,24 +21,24 @@ function App() {
     // This function handles the OAuth redirect and session retrieval
     const handleAuthSession = async () => {
       setLoading(true);
-      
+
       // Check if we have a hash in the URL (sign of OAuth redirect)
-      if (location.hash && location.hash.includes('access_token')) {
-        console.log('OAuth redirect detected');
+      if (location.hash && location.hash.includes("access_token")) {
+        console.log("OAuth redirect detected");
       }
 
       try {
         // Get the current session
         const { data, error } = await supabase.auth.getSession();
-        
+
         if (error) {
-          console.error('Error getting session:', error);
+          console.error("Error getting session:", error);
         } else {
-          console.log('Session data:', data);
+          console.log("Session data:", data);
           setSession(data.session);
         }
       } catch (error) {
-        console.error('Error in auth flow:', error);
+        console.error("Error in auth flow:", error);
       } finally {
         setLoading(false);
       }
@@ -47,12 +47,12 @@ function App() {
     handleAuthSession();
 
     // Set up the auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, currentSession) => {
-        console.log('Auth state changed:', event);
-        setSession(currentSession);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      console.log("Auth state changed:", event);
+      setSession(currentSession);
+    });
 
     // Cleanup the subscription when component unmounts
     return () => subscription.unsubscribe();
@@ -71,7 +71,7 @@ function App() {
   }
 
   return (
-    <div className="app min-h-screen bg-neutral-100">
+    <div className="app bg-neutral-100">
       {!session ? (
         // Auth routes without layout
         <Routes>
@@ -85,7 +85,10 @@ function App() {
         <Layout session={session}>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route path="/dashboard" element={<Dashboard session={session} />} />
+            <Route
+              path="/dashboard"
+              element={<Dashboard session={session} />}
+            />
             <Route path="/upload" element={<UploadCsv />} />
             <Route path="/startups" element={<StartupsList />} />
             <Route path="/send" element={<SendEmails />} />

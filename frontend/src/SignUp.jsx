@@ -1,22 +1,22 @@
 // src/SignUp.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
-import { FaGithub, FaEnvelope, FaLock, FaUserPlus } from 'react-icons/fa';
-import './App.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "./supabaseClient";
+import { FaGithub, FaEnvelope, FaLock, FaUserPlus } from "react-icons/fa";
+// import './App.css';
 
 export default function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
-    setSuccessMsg('');
+    setErrorMsg("");
+    setSuccessMsg("");
     setIsLoading(true);
 
     try {
@@ -30,12 +30,14 @@ export default function SignUp() {
         return;
       }
 
-      setSuccessMsg('Registration successful! Please check your email to confirm your account.');
+      setSuccessMsg(
+        "Registration successful! Please check your email to confirm your account."
+      );
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 3000);
     } catch (err) {
-      setErrorMsg('An unexpected error occurred. Please try again.');
+      setErrorMsg("An unexpected error occurred. Please try again.");
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -44,7 +46,7 @@ export default function SignUp() {
 
   const handleGitHub = async () => {
     await supabase.auth.signInWithOAuth({
-      provider: 'github',
+      provider: "github",
       options: { redirectTo: `${window.location.origin}/dashboard` },
     });
   };
@@ -56,18 +58,26 @@ export default function SignUp() {
           <h1 className="text-3xl font-bold text-primary-purple">23Ventures</h1>
           <p className="text-neutral-600 mt-2">Outreach Platform</p>
         </div>
-        
+
         <div className="bg-white p-8 rounded-lg shadow-lg border-t-4 border-accent-green">
-          <h2 className="text-2xl font-bold mb-6 text-center text-neutral-800">Create an Account</h2>
-          
+          <h2 className="text-2xl font-bold mb-6 text-center text-neutral-800">
+            Create an Account
+          </h2>
+
           {errorMsg && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+              role="alert"
+            >
               <span className="block sm:inline">{errorMsg}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <div
+              className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
+              role="alert"
+            >
               <span className="block sm:inline">{successMsg}</span>
             </div>
           )}
@@ -109,9 +119,25 @@ export default function SignUp() {
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Creating account...
                 </>
@@ -140,13 +166,16 @@ export default function SignUp() {
           </button>
 
           <p className="mt-6 text-center text-sm text-neutral-600">
-            Already have an account?{' '}
-            <a href="/login" className="text-accent-blue hover:underline font-medium">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="text-accent-blue hover:underline font-medium"
+            >
               Log In
             </a>
           </p>
         </div>
-        
+
         <p className="text-center text-xs text-neutral-500 mt-8">
           © 2025 23Ventures. All rights reserved.
         </p>
