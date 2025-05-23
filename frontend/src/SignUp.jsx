@@ -52,44 +52,54 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-100">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-purple">23Ventures</h1>
-          <p className="text-neutral-600 mt-2">Outreach Platform</p>
+    <div className="max-h-screen w-full bg-[#f8f9fa] flex flex-col justify-between items-center ">
+      {/* Main content */}
+      <div className="max-w-md w-full max-h-[90vh]  space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-5xl font-extrabold ">23Ventures</h1>
+          <p className="mt-2 text-sm text-[#6c757d]">Outreach Platform</p>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-lg border-t-4 border-accent-green">
-          <h2 className="text-2xl font-bold mb-6 text-center text-neutral-800">
+        {/* Card */}
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-[#e9ecef]">
+          <h2 className="text-2xl font-semibold text-center text-[#343a40] mb-6">
             Create an Account
           </h2>
 
+          {/* Alerts */}
           {errorMsg && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-              role="alert"
-            >
-              <span className="block sm:inline">{errorMsg}</span>
+            <div className="bg-red-100 text-red-700 border border-red-300 rounded-md p-3 text-sm mb-4">
+              {errorMsg}
             </div>
           )}
-
           {successMsg && (
-            <div
-              className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
-              role="alert"
-            >
-              <span className="block sm:inline">{successMsg}</span>
+            <div className="bg-green-100 text-green-700 border border-green-300 rounded-md p-3 text-sm mb-4">
+              {successMsg}
             </div>
           )}
 
-          <form onSubmit={handleSignUp} className="space-y-4">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaEnvelope className="h-5 w-5 text-neutral-500" />
+          {/* Form */}
+          <form onSubmit={handleSignUp} className="space-y-5">
+            {/* Email */}
+            {/* <div className="flex items-center border border-[#dee2e6] rounded-lg px-4 py-2 focus-within:ring-2 focus-within:ring-[#3cb371]/30 focus-within:border-[#3cb371] transition">
+              <FaEnvelope className="text-[#adb5bd] h-5 w-5 mr-3 flex-shrink-0" />
+              <input
+                type="email"
+                className="w-full bg-transparent outline-none text-sm placeholder:text-[#adb5bd] border-none"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div> */}
+            <div className="flex items-center">
+              <div className="h-full px-4 py-2.5 flex items-center justify-center  border border-[#dee2e6] border-r-0 rounded-l-lg">
+                <FaEnvelope className="text-[#adb5bd] h-5 w-5" />
               </div>
               <input
                 type="email"
-                className="w-full pl-10 p-3 border rounded focus:border-accent-green focus:ring focus:ring-green-200 focus:ring-opacity-50"
+                className="flex-grow py-3 px-4 border border-[#dee2e6] rounded-r-lg outline-none text-sm transition focus:ring-2 focus:ring-[#6a3ea1]/40 focus:border-[#6a3ea1]"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -97,13 +107,26 @@ export default function SignUp() {
               />
             </div>
 
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLock className="h-5 w-5 text-neutral-500" />
+            {/* Password */}
+            {/* <div className="flex items-center border border-[#dee2e6] rounded-lg px-4 py-2 focus-within:ring-2 focus-within:ring-[#3cb371]/30 focus-within:border-[#3cb371] transition">
+              <FaLock className="text-[#adb5bd] h-5 w-5 mr-3 flex-shrink-0" />
+              <input
+                type="password"
+                className="w-full bg-transparent outline-none text-sm placeholder:text-[#adb5bd] border-none"
+                placeholder="Password (min. 6 characters)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                minLength="6"
+                required
+              />
+            </div> */}
+            <div className="flex items-center mt-4">
+              <div className="h-full px-4 py-2.5 flex items-center justify-center  border border-[#dee2e6] border-r-0 rounded-l-lg">
+                <FaLock className="text-[#adb5bd] h-5 w-5" />
               </div>
               <input
                 type="password"
-                className="w-full pl-10 p-3 border rounded focus:border-accent-green focus:ring focus:ring-green-200 focus:ring-opacity-50"
+                className="flex-grow py-3 px-4 border border-[#dee2e6] border-l-0 rounded-r-lg outline-none text-sm transition focus:ring-2 focus:ring-[#6a3ea1]/40 focus:border-[#6a3ea1]"
                 placeholder="Password (min. 6 characters)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -112,15 +135,16 @@ export default function SignUp() {
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-accent-green text-white rounded hover:bg-green-600 transition-colors flex items-center justify-center"
+              className="w-full py-3 text-sm font-semibold text-white bg-[#3cb371] hover:bg-[#2ea065] rounded-lg transition flex items-center justify-center"
             >
               {isLoading ? (
                 <>
                   <svg
-                    className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                    className="animate-spin mr-2 h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -132,12 +156,12 @@ export default function SignUp() {
                       r="10"
                       stroke="currentColor"
                       strokeWidth="4"
-                    ></circle>
+                    />
                     <path
                       className="opacity-75"
                       fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
                   </svg>
                   Creating account...
                 </>
@@ -150,33 +174,37 @@ export default function SignUp() {
             </button>
           </form>
 
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-neutral-300"></div>
-            <span className="flex-shrink mx-4 text-neutral-500">or</span>
-            <div className="flex-grow border-t border-neutral-300"></div>
+          {/* Divider */}
+          <div className="flex items-center my-6">
+            <div className="flex-grow h-px bg-[#dee2e6]" />
+            <span className="px-4 text-xs text-[#adb5bd]">or</span>
+            <div className="flex-grow h-px bg-[#dee2e6]" />
           </div>
 
+          {/* GitHub Sign-Up */}
           <button
             onClick={handleGitHub}
             type="button"
-            className="w-full flex items-center justify-center gap-2 py-3 bg-neutral-800 text-white rounded hover:bg-neutral-900 transition-colors"
+            className="w-full py-3 text-sm font-semibold bg-black text-white rounded-lg hover:bg-[#343a40] transition flex items-center justify-center gap-2"
           >
-            <FaGithub className="h-5 w-5" aria-hidden="true" />
-            <span>Sign up with GitHub</span>
+            <FaGithub className="h-5 w-5" />
+            Sign up with GitHub
           </button>
 
-          <p className="mt-6 text-center text-sm text-neutral-600">
+          {/* Login Link */}
+          <p className="mt-6 text-center text-sm text-[#6c757d]">
             Already have an account?{" "}
             <a
               href="/login"
-              className="text-accent-blue hover:underline font-medium"
+              className="text-[#4a90e2] hover:underline font-medium"
             >
               Log In
             </a>
           </p>
         </div>
 
-        <p className="text-center text-xs text-neutral-500 mt-8">
+        {/* Footer */}
+        <p className="text-center text-xs text-[#adb5bd] mt-10">
           © 2025 23Ventures. All rights reserved.
         </p>
       </div>
