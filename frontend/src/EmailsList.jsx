@@ -78,9 +78,9 @@ export default function EmailsList() {
 
   return (
     <div className="container bg-[#f8f9fa] mx-auto px-4 py-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-        <div className="mb-4 sm:mb-0">
-          <h1 className="text-3xl sm:text-4xl font-extrabold  leading-tight">
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 text-center sm:text-left">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight">
             Email History
           </h1>
           <p className="text-neutral-600 text-sm sm:text-base mt-1 max-w-xs sm:max-w-full">
