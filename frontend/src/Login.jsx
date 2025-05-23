@@ -160,7 +160,7 @@ export default function Login() {
             Don’t have an account?{" "}
             <a
               href="/signup"
-              className="text-[#6a3ea1] font-medium hover:underline"
+              className="text-[#6a3ea1] font-medium hover:text-[#343a40]"
             >
               Sign Up
             </a>
