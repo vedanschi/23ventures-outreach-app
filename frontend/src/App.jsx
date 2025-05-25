@@ -10,7 +10,7 @@ import EmailsList from "./EmailsList";
 import Layout from "./components/Layout";
 import { supabase } from "./supabaseClient";
 import { useState, useEffect } from "react";
-// import "./App.css";
+// import './App.css';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -72,31 +72,19 @@ function App() {
 
   return (
     <div className="app bg-neutral-100">
-      {!session ? (
-        // Auth routes without layout
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      ) : (
-        // Protected routes with layout
-        <Layout session={session}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route
-              path="/dashboard"
-              element={<Dashboard session={session} />}
-            />
-            <Route path="/upload" element={<UploadCsv />} />
-            <Route path="/startups" element={<StartupsList />} />
-            <Route path="/send" element={<SendEmails />} />
-            <Route path="/emails" element={<EmailsList />} />
-            <Route path="*" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </Layout>
-      )}
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/dashboard" element={<Dashboard session={session} />} />
+        <Route path="/upload" element={<UploadCsv />} />
+        <Route path="/startups" element={<StartupsList />} />
+        <Route path="/send" element={<SendEmails />} />
+        <Route path="/emails" element={<EmailsList />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
+      </Routes>
     </div>
   );
 }

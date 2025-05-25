@@ -47,12 +47,12 @@ export default function Login() {
   };
 
   return (
-    <div className="max-h-screen w-full bg-[#f8f9fa] flex flex-col justify-between items-center ">
+    <div className="min-h-screen w-full p-5  bg-[#f8f9fa] flex flex-col justify-between items-center ">
       {/* Main content */}
       <div className="max-w-md w-full max-h-[90vh]  space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-5xl font-extrabold ">23Ventures</h1>
+          <h1 className="text-6xl sm:text-5xl font-extrabold ">23Ventures</h1>
           <p className="mt-2 text-sm text-[#6c757d]">Outreach Platform</p>
         </div>
 
@@ -71,7 +71,7 @@ export default function Login() {
           <form onSubmit={handleLogin} className="space-y-5">
             {/* Email Field */}
             <div className="flex items-center">
-              <div className="h-full px-4 py-2.5 flex items-center justify-center  border border-[#dee2e6] border-r-0 rounded-l-lg">
+              <div className="h-full px-4 py-3 flex items-center justify-center  border border-[#dee2e6] border-r-0 rounded-l-lg">
                 <FaEnvelope className="text-[#adb5bd] h-5 w-5" />
               </div>
               <input
@@ -86,12 +86,12 @@ export default function Login() {
 
             {/* Password Field */}
             <div className="flex items-center mt-4">
-              <div className="h-full px-4 py-2.5 flex items-center justify-center  border border-[#dee2e6] border-r-0 rounded-l-lg">
+              <div className="h-full px-4 py-3 flex items-center justify-center  border border-[#dee2e6] border-r-0 rounded-l-lg">
                 <FaLock className="text-[#adb5bd] h-5 w-5" />
               </div>
               <input
                 type="password"
-                className="flex-grow py-3 px-4 border border-[#dee2e6] border-l-0 rounded-r-lg outline-none text-sm transition focus:ring-2 focus:ring-[#6a3ea1]/40 focus:border-[#6a3ea1]"
+                className="flex-grow py-3 px-4 border border-[#dee2e6]  rounded-r-lg outline-none text-sm transition focus:ring-2 focus:ring-[#6a3ea1]/40 focus:border-[#6a3ea1]"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
