@@ -77,10 +77,10 @@ export default function EmailsList() {
   }, []);
 
   return (
-    <div className="container bg-[#f8f9fa] mx-auto px-4 py-6">
-      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 text-center sm:text-left">
+    <div className="min-h-screen w-full p-5 bg-[#f8f9fa] flex flex-col justify-start items-center ">
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 text-center ">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight">
+          <h1 className="text-5xl sm:text-4xl font-extrabold leading-tight mb-4 text-center">
             Email History
           </h1>
           <p className="text-neutral-600 text-sm sm:text-base mt-1 max-w-xs sm:max-w-full">
@@ -101,7 +101,7 @@ export default function EmailsList() {
         </div>
       ) : emails.length === 0 ? (
         <div className="bg-white rounded-lg shadow-lg p-10 text-center max-w-md mx-auto">
-          <FaEnvelope className="h-14 w-14 text-neutral-400 mx-auto mb-5" />
+          <FaEnvelope className="h-14 w-14 text-[#6a3ea1] mx-auto mb-5" />
           <h2 className="text-2xl font-semibold text-neutral-700 mb-3">
             No Emails Sent Yet
           </h2>
