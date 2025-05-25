@@ -84,12 +84,12 @@ export default function Dashboard({ session }) {
   }, []);
 
   return (
-    <div className="container bg-[#f8f9fa] mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen w-full p-5 bg-[#f8f9fa] flex flex-col justify-start items-center ">
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold sm:text-4xl  mb-2">
+        <h1 className="text-3xl sm:text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-center">
           Welcome to 23Ventures Outreach
         </h1>
-        <p className="text-neutral-600 text-sm sm:text-base">
+        <p className="text-neutral-600 text-center text-sm sm:text-base">
           Manage your startup outreach campaigns from one place
         </p>
       </div>

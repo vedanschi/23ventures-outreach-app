@@ -127,7 +127,7 @@ export default function StartupsList() {
     <div className="container  bg-[#f8f9fa]  mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold  leading-tight">
+          <h1 className="text-3xl sm:text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-center">
             Startups
           </h1>
           <p className="text-neutral-600 text-sm sm:text-base">

@@ -104,7 +104,7 @@ export default function SendEmails() {
     <div className="min-h-screen w-full p-5 bg-[#f8f9fa] flex flex-col justify-start items-center ">
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 text-center sm:text-left">
         <div>
-          <h1 className="text-5xl sm:text-4xl font-extrabold leading-tight mb-4 text-center">
+          <h1 className="text-3xl sm:text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-center">
             Send Emails
           </h1>
           <p className="text-neutral-600 text-sm sm:text-base mt-1 max-w-xs sm:max-w-full">
@@ -272,7 +272,7 @@ export default function SendEmails() {
       <div className="mt-6 text-center sm:text-left">
         <button
           onClick={() => navigate("/dashboard")}
-          className=" px-6 py-3  text-white bg-[#6a3ea1] hover:bg-[#8a63c9]  rounded transition flex items-center justify-center "
+          className="px-6 py-3 bg-[#6a3ea1] text-white rounded-md hover:bg-[#8a63c9] transition-colors font-semibold text-sm sm:text-base "
         >
           Back to Dashboard
         </button>

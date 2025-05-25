@@ -84,6 +84,7 @@ function App() {
         <Route path="/send" element={<SendEmails />} />
         <Route path="/emails" element={<EmailsList />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="/layout" element={<Layout />} />
       </Routes>
     </div>
   );
