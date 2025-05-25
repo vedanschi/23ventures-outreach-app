@@ -79,23 +79,25 @@ export default function UploadCsv() {
   };
 
   return (
-    <div className="container bg-[#f8f9fa] mx-auto px-4 py-6">
-      <h1 className="text-3xl sm:text-4xl font-extrabold  leading-tight mb-4">
+    <div className="min-h-screen w-full p-5 bg-[#f8f9fa] flex flex-col justify-start items-center">
+      <h1 className="text-5xl sm:text-4xl font-extrabold leading-tight mb-4 text-center">
         Upload Startups CSV
       </h1>
 
-      <div className="mb-4">
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded file:border-0
-            file:text-sm file:font-semibold
-            file:bg-blue-50 file:text-blue-700
-            hover:file:bg-blue-100"
-        />
+      <div className="mb-4 w-full max-w-md">
+        <label className="block border border-gray-300 rounded-md overflow-hidden bg-white">
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileChange}
+            className="block w-full text-sm text-gray-500
+        file:mr-4 file:py-3 file:px-4
+        file:rounded-none file:border-0
+        file:text-sm file:font-semibold
+        file:bg-blue-50 file:text-blue-700
+        hover:file:bg-blue-100"
+          />
+        </label>
       </div>
 
       {message && <p className="mb-4">{message}</p>}
@@ -103,7 +105,7 @@ export default function UploadCsv() {
       <button
         onClick={handleUpload}
         disabled={!file || uploading}
-        className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-neutral-400 disabled:cursor-not-allowed disabled:opacity-90"
       >
         {uploading ? "Uploading..." : "Upload and Process"}
       </button>
@@ -111,7 +113,7 @@ export default function UploadCsv() {
       <div className="mt-4">
         <button
           onClick={() => navigate("/dashboard")}
-          className="text-gray-600 "
+          className=" px-6 py-3  text-white bg-[#6a3ea1] hover:bg-[#8a63c9]  rounded transition flex items-center justify-center "
         >
           Back to Dashboard
         </button>
