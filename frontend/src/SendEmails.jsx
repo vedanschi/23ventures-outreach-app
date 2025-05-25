@@ -101,10 +101,10 @@ export default function SendEmails() {
   };
 
   return (
-    <div className="container bg-[#f8f9fa]  mx-auto px-4 py-6 max-w-5xl">
+    <div className="min-h-screen w-full p-5 bg-[#f8f9fa] flex flex-col justify-start items-center ">
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 text-center sm:text-left">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-purple leading-tight">
+          <h1 className="text-5xl sm:text-4xl font-extrabold leading-tight mb-4 text-center">
             Send Emails
           </h1>
           <p className="text-neutral-600 text-sm sm:text-base mt-1 max-w-xs sm:max-w-full">
@@ -131,7 +131,7 @@ export default function SendEmails() {
         </div>
       )}
 
-      <div className="mb-4 flex items-center justify-start space-x-6 text-sm text-neutral-700 font-medium">
+      <div className="mb-4 flex items-center justify-start space-x-6 text-sm  text-neutral-700 font-medium">
         <span>Email Type:</span>
         <label className="relative cursor-pointer">
           <input
@@ -140,12 +140,13 @@ export default function SendEmails() {
             value="outreach"
             checked={emailType === "outreach"}
             onChange={() => setEmailType("outreach")}
-            className="peer sr-only"
+            className="peer sr-only "
           />
-          <span className="inline-block px-3 py-1 rounded-full border border-neutral-300 peer-checked:bg-primary-purple peer-checked:text-white transition-colors">
+          <span className="inline-block  px-3 py-1 rounded-full border-2 border-neutral-300 peer-checked:bg-white peer-checked:text-[#6a3ea1] peer-checked:border-[#6a3ea1] transition-colors">
             Initial Outreach
           </span>
         </label>
+
         <label className="relative cursor-pointer">
           <input
             type="radio"
@@ -155,7 +156,7 @@ export default function SendEmails() {
             onChange={() => setEmailType("followup")}
             className="peer sr-only"
           />
-          <span className="inline-block px-3 py-1 rounded-full border border-neutral-300 peer-checked:bg-accent-blue peer-checked:text-white transition-colors">
+          <span className="inline-block px-3 py-1 rounded-full border-2 border-neutral-300 peer-checked:bg-white peer-checked:text-[#6a3ea1] peer-checked:border-[#6a3ea1] transition-colors">
             Follow-Up
           </span>
         </label>
@@ -163,11 +164,11 @@ export default function SendEmails() {
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-primary-purple"></div>
+          <div className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-[#6a3ea1]"></div>
         </div>
       ) : startups.length === 0 ? (
         <div className="bg-white rounded-lg shadow-lg p-10 text-center max-w-md mx-auto">
-          <FaPaperPlane className="h-14 w-14 text-neutral-400 mx-auto mb-5" />
+          <FaPaperPlane className="h-14 w-14 text-[#6a3ea1] mx-auto mb-5" />
           <h2 className="text-2xl font-semibold text-neutral-700 mb-3">
             No Startups Available
           </h2>
@@ -176,7 +177,7 @@ export default function SendEmails() {
           </p>
           <button
             onClick={() => navigate("/upload")}
-            className="px-6 py-3 bg-primary-purple text-white rounded-md hover:bg-primary-purple-light transition-colors font-semibold text-sm sm:text-base"
+            className="px-6 py-3 bg-[#6a3ea1] text-white rounded-md hover:bg-[#8a63c9] transition-colors font-semibold text-sm sm:text-base"
           >
             Upload Startups CSV
           </button>
@@ -188,7 +189,7 @@ export default function SendEmails() {
               <div className="flex items-center space-x-3">
                 <input
                   type="checkbox"
-                  className="form-checkbox h-5 w-5 text-primary-purple rounded focus:ring-primary-purple"
+                  className="form-checkbox h-5 w-5 text-[#6a3ea1] rounded focus:ring-[#6a3ea1]"
                   checked={
                     selectedIds.size === startups.length && startups.length > 0
                   }
@@ -204,7 +205,7 @@ export default function SendEmails() {
                 className={`px-5 py-2 rounded-md flex items-center justify-center text-sm sm:text-base font-semibold transition-colors ${
                   sending || selectedIds.size === 0
                     ? "bg-neutral-300 text-neutral-500 cursor-not-allowed"
-                    : "bg-primary-purple text-white hover:bg-primary-purple-light"
+                    : "bg-[#6a3ea1] text-white hover:bg-[#8a63c9]"
                 }`}
               >
                 {sending ? "Sending..." : `Send ${selectedIds.size} Email(s)`}
@@ -237,7 +238,7 @@ export default function SendEmails() {
                     <td className="px-3 sm:px-6 py-3">
                       <input
                         type="checkbox"
-                        className="form-checkbox h-5 w-5 text-primary-purple rounded focus:ring-primary-purple"
+                        className="form-checkbox h-5 w-5 text-[#6a3ea1] rounded focus:ring-[#6a3ea1]"
                         checked={selectedIds.has(s.id)}
                         onChange={() => toggleSelect(s.id)}
                       />
@@ -271,7 +272,7 @@ export default function SendEmails() {
       <div className="mt-6 text-center sm:text-left">
         <button
           onClick={() => navigate("/dashboard")}
-          className="text-gray-600  text-sm sm:text-base"
+          className=" px-6 py-3  text-white bg-[#6a3ea1] hover:bg-[#8a63c9]  rounded transition flex items-center justify-center "
         >
           Back to Dashboard
         </button>
