@@ -80,7 +80,7 @@ export default function UploadCsv() {
 
   return (
     <div className="min-h-screen w-full p-5 bg-[#f8f9fa] flex flex-col justify-start items-center">
-      <h1 className="text-3xl sm:text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-center">
+      <h1 className="text-4xl sm:text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-center">
         Upload Startups CSV
       </h1>
 

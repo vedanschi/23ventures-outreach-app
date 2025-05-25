@@ -80,7 +80,7 @@ export default function EmailsList() {
     <div className="min-h-screen w-full p-5 bg-[#f8f9fa] flex flex-col justify-start items-center ">
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 text-center ">
         <div>
-          <h1 className="text-3xl sm:text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-center">
+          <h1 className="text-4xl sm:text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-center">
             Email History
           </h1>
           <p className="text-neutral-600 text-sm sm:text-base mt-1 max-w-xs sm:max-w-full">
