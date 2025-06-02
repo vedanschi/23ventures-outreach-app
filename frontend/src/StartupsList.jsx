@@ -52,7 +52,7 @@ export default function StartupsList() {
     if (!newStartup.name.trim()) return "Name is required";
     if (!newStartup.email.trim()) return "Email is required";
     if (!newStartup.email.includes('@')) return "Email is invalid";
-
+    
     // Basic URL validation
     if (newStartup.website && !newStartup.website.startsWith('http')) {
       return "Website must start with http:// or https://";
@@ -60,13 +60,13 @@ export default function StartupsList() {
     if (newStartup.linkedin && !newStartup.linkedin.startsWith('http')) {
       return "LinkedIn URL must start with http:// or https://";
     }
-
+    
     return null;
   };
 
   const handleAddStartup = async (e) => {
     e.preventDefault();
-
+    
     // Validate form
     const validationError = validateForm();
     if (validationError) {
@@ -74,10 +74,10 @@ export default function StartupsList() {
       setMessageType('error');
       return;
     }
-
+    
     setAddingStartup(true);
     setMessage('');
-
+    
     try {
       // Ensure URLs have proper format
       const formattedStartup = {
@@ -85,14 +85,14 @@ export default function StartupsList() {
         website: newStartup.website || 'https://example.com',
         linkedin: newStartup.linkedin || 'https://linkedin.com/company/example'
       };
-
+      
       const { data, error } = await supabase
         .from('startups')
         .insert([formattedStartup])
         .select();
-
+        
       if (error) throw error;
-
+      
       // Success - update the UI
       setStartups(prev => [data[0], ...prev]);
       setMessage('Startup added successfully!');
@@ -126,8 +126,8 @@ export default function StartupsList() {
           <button
             onClick={() => setShowAddForm(!showAddForm)}
             className={`px-4 py-2 rounded-md flex items-center ${
-              showAddForm
-                ? 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300'
+              showAddForm 
+                ? 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300' 
                 : 'bg-primary-purple text-white hover:bg-primary-purple-light'
             }`}
           >
@@ -140,17 +140,17 @@ export default function StartupsList() {
           </button>
         </div>
       </div>
-
+      
       {message && (
         <div className={`mb-6 p-4 rounded-md ${
-          messageType === 'success'
-            ? 'bg-green-100 text-green-700 border border-green-300'
+          messageType === 'success' 
+            ? 'bg-green-100 text-green-700 border border-green-300' 
             : 'bg-red-100 text-red-700 border border-red-300'
         }`}>
           {message}
         </div>
       )}
-
+      
       {showAddForm && (
         <div className="mb-6 p-6 bg-white rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-neutral-800">Add New Startup</h2>
@@ -169,7 +169,7 @@ export default function StartupsList() {
                   required
                 />
               </div>
-
+              
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Email *
@@ -183,7 +183,7 @@ export default function StartupsList() {
                   required
                 />
               </div>
-
+              
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Website
@@ -197,7 +197,7 @@ export default function StartupsList() {
                   className="w-full p-2 border rounded focus:ring focus:ring-primary-purple-light focus:border-primary-purple"
                 />
               </div>
-
+              
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   LinkedIn
@@ -211,7 +211,7 @@ export default function StartupsList() {
                   className="w-full p-2 border rounded focus:ring focus:ring-primary-purple-light focus:border-primary-purple"
                 />
               </div>
-
+              
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Industry
@@ -224,7 +224,7 @@ export default function StartupsList() {
                   className="w-full p-2 border rounded focus:ring focus:ring-primary-purple-light focus:border-primary-purple"
                 />
               </div>
-
+              
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Tech Stack
@@ -238,7 +238,7 @@ export default function StartupsList() {
                 />
               </div>
             </div>
-
+            
             <div className="mt-4">
               <button
                 type="submit"
@@ -261,7 +261,7 @@ export default function StartupsList() {
           </form>
         </div>
       )}
-
+      
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary-purple"></div>
@@ -275,8 +275,8 @@ export default function StartupsList() {
           <FaUsers className="h-12 w-12 text-neutral-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-neutral-700 mb-2">No Startups Yet</h2>
           <p className="text-neutral-600 mb-4">Add your first startup to get started.</p>
-          <button
-            onClick={() => setShowAddForm(true)}
+          <button 
+            onClick={() => setShowAddForm(true)} 
             className="px-4 py-2 bg-primary-purple text-white rounded-md hover:bg-primary-purple-light transition-colors"
           >
             <FaPlus className="inline mr-2" />
@@ -307,10 +307,10 @@ export default function StartupsList() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {s.website && (
-                        <a
-                          href={s.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <a 
+                          href={s.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
                           className="text-accent-blue hover:underline flex items-center text-sm"
                         >
                           {new URL(s.website).hostname}
@@ -320,10 +320,10 @@ export default function StartupsList() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {s.linkedin && (
-                        <a
-                          href={s.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <a 
+                          href={s.linkedin} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
                           className="text-accent-blue hover:underline flex items-center text-sm"
                         >
                           <FaLinkedin className="mr-1" />

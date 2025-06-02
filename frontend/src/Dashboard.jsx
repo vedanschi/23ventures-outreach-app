@@ -17,30 +17,30 @@ export default function Dashboard({ session }) {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-
+      
       try {
         // Fetch startup count
         const { count: startupsCount, error: startupsError } = await supabase
           .from('startups')
           .select('*', { count: 'exact', head: true });
-
+        
         if (startupsError) throw startupsError;
-
+        
         // Fetch email count
         const { count: emailsCount, error: emailsError } = await supabase
           .from('emails')
           .select('*', { count: 'exact', head: true });
-
+        
         if (emailsError) throw emailsError;
-
+        
         // Fetch viewed email count
         const { count: viewedCount, error: viewedError } = await supabase
           .from('emails')
           .select('*', { count: 'exact', head: true })
           .eq('viewed', true);
-
+        
         if (viewedError) throw viewedError;
-
+        
         // Fetch recent emails
         const { data: recentEmailsData, error: recentEmailsError } = await supabase
           .from('emails')
@@ -53,15 +53,15 @@ export default function Dashboard({ session }) {
           `)
           .order('sent_at', { ascending: false })
           .limit(5);
-
+        
         if (recentEmailsError) throw recentEmailsError;
-
+        
         setStats({
           startups: startupsCount || 0,
           emails: emailsCount || 0,
           viewed: viewedCount || 0
         });
-
+        
         setRecentEmails(recentEmailsData || []);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -69,7 +69,7 @@ export default function Dashboard({ session }) {
         setLoading(false);
       }
     }
-
+    
     fetchData();
   }, []);
 
@@ -79,7 +79,7 @@ export default function Dashboard({ session }) {
         <h1 className="text-2xl font-bold text-primary-purple">Welcome to 23Ventures Outreach</h1>
         <p className="text-neutral-600">Manage your startup outreach campaigns from one place</p>
       </div>
-
+      
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary-purple"></div>
@@ -103,7 +103,7 @@ export default function Dashboard({ session }) {
                 View all startups →
               </Link>
             </div>
-
+            
             <div className="dashboard-card bg-white rounded-lg shadow-md p-6 border-t-4 border-accent-blue">
               <div className="flex items-start justify-between">
                 <div>
@@ -119,7 +119,7 @@ export default function Dashboard({ session }) {
                 Send more emails →
               </Link>
             </div>
-
+            
             <div className="dashboard-card bg-white rounded-lg shadow-md p-6 border-t-4 border-accent-green">
               <div className="flex items-start justify-between">
                 <div>
@@ -136,7 +136,7 @@ export default function Dashboard({ session }) {
               </Link>
             </div>
           </div>
-
+          
           {/* Quick Actions and Recent Activity */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow-md p-6">
@@ -156,7 +156,7 @@ export default function Dashboard({ session }) {
                 </Link>
               </div>
             </div>
-
+            
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-4 text-neutral-800">Recent Activity</h2>
               {recentEmails.length > 0 ? (
@@ -187,7 +187,7 @@ export default function Dashboard({ session }) {
                   No recent activity to display. Start by adding startups or sending emails.
                 </p>
               )}
-
+              
               <div className="mt-4 text-right">
                 <Link to="/emails" className="text-primary-purple hover:underline text-sm font-medium">
                   View all activity →

@@ -21,7 +21,7 @@ function App() {
     // This function handles the OAuth redirect and session retrieval
     const handleAuthSession = async () => {
       setLoading(true);
-
+      
       // Check if we have a hash in the URL (sign of OAuth redirect)
       if (location.hash && location.hash.includes('access_token')) {
         console.log('OAuth redirect detected');
@@ -30,7 +30,7 @@ function App() {
       try {
         // Get the current session
         const { data, error } = await supabase.auth.getSession();
-
+        
         if (error) {
           console.error('Error getting session:', error);
         } else {

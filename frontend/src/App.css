@@ -3,11 +3,11 @@
   --primary-purple: #6a3ea1;
   --primary-purple-light: #8a63c9;
   --primary-purple-dark: #4a2c7b;
-
+  
   /* Accent colors */
   --accent-green: #3cb371;
   --accent-blue: #4a90e2;
-
+  
   /* Neutral colors */
   --neutral-100: #f8f9fa;
   --neutral-200: #e9ecef;
@@ -399,11 +399,11 @@ label {
   #root {
     padding: 1rem;
   }
-
+  
   .dashboard-card {
     padding: 1rem;
   }
-
+  
   th, td {
     padding: 8px 10px;
   }

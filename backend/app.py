@@ -57,7 +57,7 @@ def send_email_route():
     # Generate email via Together AI
     # Note: The 'email_id' parameter was removed from get_generated_email as part of the changes
     # in backend/utils/ai_utils.py, so it's correctly called here without it.
-    email_body_generated = get_generated_email(prompt, recipient_email)
+    email_body_generated = get_generated_email(prompt, recipient_email) 
 
     if not isinstance(email_body_generated, str):
         print(f"Error: get_generated_email did not return a string. Got: {type(email_body_generated)}")
@@ -89,7 +89,7 @@ def send_email_route():
     try:
         # Attempt to insert the email record into Supabase
         insertion_response = supabase.table('emails').insert(email_record).execute()
-
+        
         if hasattr(insertion_response, 'data') and insertion_response.data and len(insertion_response.data) > 0:
             # Ensure data[0] is a dictionary before calling .get()
             if isinstance(insertion_response.data[0], dict):
@@ -107,7 +107,7 @@ def send_email_route():
                 error_detail = f"Supabase error on insert: {str(insertion_response.error)}"
             elif hasattr(insertion_response, 'message') and insertion_response.message: # Check for a message if no explicit error object
                 error_detail = f"Supabase message on insert: {insertion_response.message}"
-
+            
             # Log the critical failure and the full Supabase response for debugging
             print(f"CRITICAL: Email for {recipient_email} not saved to DB. Reason: {error_detail}. Full response: {vars(insertion_response)}")
             # Return a 500 error to the client; do not proceed to send the email
@@ -125,9 +125,9 @@ def send_email_route():
     # Now, prepare the email body with the tracking pixel.
     email_body_to_send = email_body_generated
     is_html = False
-
+    
     # It's guaranteed email_id is not None here due to the check above.
-    app_base_url = os.getenv('APP_BASE_URL', 'http://localhost:5000')
+    app_base_url = os.getenv('BACKEND_URL', 'http://localhost:5000')
     tracking_pixel_url = f"{app_base_url}/api/track/{email_id}"
     tracking_pixel_img = f'<img src="{tracking_pixel_url}" width="1" height="1" alt="" />'
     email_body_to_send = email_body_generated + tracking_pixel_img
@@ -135,13 +135,13 @@ def send_email_route():
 
     # Attempt to send the email
     email_sent_successfully = send_email(recipient_email, subject, email_body_to_send, html=is_html)
-
+    
     if not email_sent_successfully:
         # If email sending fails after successful DB save
         # Optionally, one could try to update the DB record here to reflect the send failure.
         print(f"ERROR: Email for {recipient_email} (DB ID: {email_id}) saved to DB, but FAILED to send via provider.")
         return jsonify({"error": "Email record saved, but failed to send email. Check server logs."}), 500
-
+        
     # Success: Email saved to DB and sent
     return jsonify({"message": f"Email successfully sent to {recipient_email} and saved (ID: {email_id})."})
 
@@ -190,23 +190,31 @@ def process_csv():
 
 @app.route('/api/track/<email_id>', methods=['GET'])
 def track_email(email_id):
+    print(f"INFO: /api/track endpoint hit for email_id: {email_id}") 
     try:
-        # Update the email as viewed in the database
-        # Use a specific timestamp for viewed_at for consistency, e.g., supabase.rpc('now') or similar
         update_response = supabase.table('emails').update({'viewed': True, 'viewed_at': 'now()'}).eq('id', email_id).execute()
 
-        # Log if update failed for some reason (optional, but good for debugging)
-        if hasattr(update_response, 'error') and update_response.error:
-            print(f"Error updating email view status for {email_id}: {update_response.error}")
-        elif not (hasattr(update_response, 'data') and update_response.data and len(update_response.data) > 0):
-            print(f"No data returned or update seemed unsuccessful for {email_id}, but no explicit error.")
+        print(f"INFO: Supabase update response for email_id {email_id}:")
+        if hasattr(update_response, 'data'):
+            print(f"  data: {update_response.data}")
+        if hasattr(update_response, 'error'):
+            print(f"  error: {update_response.error}")
+        if hasattr(update_response, 'count'): # Check for count attribute
+             print(f"  count: {update_response.count}")
 
+        if hasattr(update_response, 'error') and update_response.error:
+            print(f"ERROR: Error updating email view status for {email_id}: {update_response.error}")
+        elif not (hasattr(update_response, 'data') and update_response.data and len(update_response.data) > 0):
+            print(f"WARNING: No data returned in update response for email_id {email_id}. This likely means the email_id was not found in the database or no change was made.")
+        else:
+            print(f"INFO: Successfully updated email view status for email_id: {email_id}. Data: {update_response.data}")
 
     except Exception as e:
-        print(f"Exception while tracking email {email_id}: {e}")
-
-    # Always return a 1x1 transparent pixel, regardless of DB update success
-    # This prevents broken images in emails if tracking fails
+        import traceback 
+        print(f"CRITICAL: Exception in track_email for email_id {email_id}: {e}")
+        print(traceback.format_exc())
+    
+    # Always return a 1x1 transparent pixel
     pixel_gif = base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
     response = make_response(send_file(io.BytesIO(pixel_gif), mimetype='image/gif'))
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'

@@ -56,10 +56,10 @@ export default function SignUp() {
           <h1 className="text-3xl font-bold text-primary-purple">23Ventures</h1>
           <p className="text-neutral-600 mt-2">Outreach Platform</p>
         </div>
-
+        
         <div className="bg-white p-8 rounded-lg shadow-lg border-t-4 border-accent-green">
           <h2 className="text-2xl font-bold mb-6 text-center text-neutral-800">Create an Account</h2>
-
+          
           {errorMsg && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
               <span className="block sm:inline">{errorMsg}</span>
@@ -146,7 +146,7 @@ export default function SignUp() {
             </a>
           </p>
         </div>
-
+        
         <p className="text-center text-xs text-neutral-500 mt-8">
           © 2025 23Ventures. All rights reserved.
         </p>

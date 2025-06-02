@@ -57,7 +57,7 @@ export default function SendEmails() {
     setSending(true);
     setMessage('');
     setMessageType('');
-
+    
     try {
       // Build list of selected startup details
       const payloadList = startups
@@ -82,7 +82,7 @@ export default function SendEmails() {
         const result = await res.json();
         if (!res.ok) throw new Error(result.error || 'Send failed');
       }
-
+      
       setMessage(`Successfully sent ${payloadList.length} emails.`);
       setMessageType('success');
       setSelectedIds(new Set());
@@ -106,8 +106,8 @@ export default function SendEmails() {
 
       {message && (
         <div className={`mb-6 p-4 rounded-md ${
-          messageType === 'success'
-            ? 'bg-green-100 text-green-700 border border-green-300'
+          messageType === 'success' 
+            ? 'bg-green-100 text-green-700 border border-green-300' 
             : 'bg-red-100 text-red-700 border border-red-300'
         }`}>
           <div className="flex items-center">
@@ -160,8 +160,8 @@ export default function SendEmails() {
           <FaPaperPlane className="h-12 w-12 text-neutral-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-neutral-700 mb-2">No Startups Available</h2>
           <p className="text-neutral-600 mb-4">Add startups to your database before sending emails.</p>
-          <button
-            onClick={() => navigate('/upload')}
+          <button 
+            onClick={() => navigate('/upload')} 
             className="px-4 py-2 bg-primary-purple text-white rounded-md hover:bg-primary-purple-light transition-colors"
           >
             Upload Startups CSV
