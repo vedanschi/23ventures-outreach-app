@@ -65,10 +65,24 @@ def send_email_route():
     if email_body_generated.startswith("Error"): # Keep existing check for error strings from AI
         return jsonify({"error": email_body_generated}), 500
 
+    startup_id = None # Default to None
+    if company_name: # Only query if company_name is available
+        try:
+            startup_response = supabase.table('startups').select('id').eq('name', company_name).limit(1).execute()
+            if startup_response.data and len(startup_response.data) > 0:
+                startup_id = startup_response.data[0].get('id')
+                print(f"INFO: Found startup_id: {startup_id} for company: {company_name}")
+            else:
+                print(f"INFO: No startup found with name: {company_name}. Proceeding without startup_id.")
+        except Exception as e:
+            print(f"WARNING: Error querying startups table for {company_name}: {e}")
+
     email_record = {
         "recipient_email": recipient_email,
         "subject": subject,
-        "body": email_body_generated
+        "body": email_body_generated,
+        "startup_id": startup_id, # This was added in the previous step
+        "email_type": email_type  # Add this line
     }
 
     email_id = None # Initialize email_id
@@ -76,9 +90,14 @@ def send_email_route():
         # Attempt to insert the email record into Supabase
         insertion_response = supabase.table('emails').insert(email_record).execute()
 
-        # Check if insertion was successful and an ID was returned
         if hasattr(insertion_response, 'data') and insertion_response.data and len(insertion_response.data) > 0:
-            email_id = insertion_response.data[0].get('id')
+            # Ensure data[0] is a dictionary before calling .get()
+            if isinstance(insertion_response.data[0], dict):
+                email_id = insertion_response.data[0].get('id')
+            else:
+                email_id = None # data[0] is not a dict, so cannot get id
+        else:
+            email_id = None # No data or data is empty
 
         # If no email_id was obtained, the insertion failed or didn't return an ID
         if not email_id:
