@@ -23,8 +23,6 @@ mail = Mail()
 # Initialize mail with the app
 def init_mail(app):
     app.config.from_object(Config)
-    print(f"DEBUG: app.config['MAIL_USERNAME'] = {app.config.get('MAIL_USERNAME')}")
-    print(f"DEBUG: app.config['MAIL_DEFAULT_SENDER'] = {app.config.get('MAIL_DEFAULT_SENDER')}")
     mail.init_app(app)
 
 # Supabase client

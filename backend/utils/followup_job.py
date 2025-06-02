@@ -10,7 +10,7 @@ def send_scheduled_followups():
     sent_at older than N days, then generate & send follow-up emails.
     """
     # 2) Determine which rows need follow-up (e.g. sent_at <= now - 3 days)
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=3)
+    cutoff = datetime.utcnow() - timedelta(days=3)
     resp = supabase.from_("emails") \
         .select("id, startup_id, sent_at") \
         .eq("follow_up", False) \
@@ -48,5 +48,5 @@ def send_scheduled_followups():
         # 5) Mark follow_up=True and update sent_at
         supabase.from_("emails").update({
             "follow_up": True,
-            "sent_at": datetime.datetime.now(datetime.timezone.utc)
+            "sent_at": datetime.utcnow().isoformat()
         }).eq("id", email_row["id"]).execute()
